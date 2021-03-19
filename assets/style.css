@@ -1,0 +1,69 @@
+
+/* general/layout */
+body, table, div, p{
+    font-size: 13px;
+    font-family: arial;
+    color:black;
+}
+.header {
+    padding: 20px;
+    display: flex;
+}
+.content {
+    padding:20px;
+}
+.footer {
+    padding: 20px;
+}
+.logo img {
+    max-width: 60px;
+}
+div.alert {
+    width:100%;
+    padding: 10px;
+    border: 1px solid red;
+    color: red;
+}
+
+/* navigation */
+.navigation {
+    margin:10px;
+}
+
+.navigation ul {
+    list-style: none;
+}
+.navigation ul li {
+    padding: 0px;
+    margin: 10px;
+    display: inline;
+}
+.navigation ul li a {
+    border: 1px solid silver;
+    padding: 10px;
+    text-decoration: none;;
+    color: black;
+}
+.navigation ul li a:hover {
+    background-color: mediumaquamarine;
+}
+
+/* Home page */
+.messageTable {
+    min-width: 700px;
+    border-collapse: collapse;
+}
+.messageTable thead {
+    background-color: mediumaquamarine;
+}
+.messageTable tbody tr:nth-child(even) {
+    background-color: silver;
+}
+.messageTable tbody tr:hover {
+    background-color: burlywood;
+}
+
+/* LOGIN PAGE */
+.loginForm {
+    max-width: 300px;
+}

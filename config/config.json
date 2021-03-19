@@ -1,0 +1,12 @@
+{
+    "app": {
+        "basePath": "/Projekt_Notenverwaltung/"
+    },
+    "database": {
+        "dbType": "mysql",
+        "server": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "Projekt_Notenverwaltung"
+    }
+}
