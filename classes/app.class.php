@@ -63,7 +63,26 @@
         }
 
         /**
-         * the application login method
+         * the application register method
+         */
+        public function register($username, $pasword, $passwordRepeat) : string {           
+            if ($pasword == $passwordRepeat){
+                if (!$this->dbContext->doesUsernameExist($username)){
+                    $this->dbContext->addUser($username, $pasword);
+                    $this->login($username, $pasword);
+                    return "";
+                }
+                else{
+                    return "Username existiert bereits";
+                }            
+            } 
+            else{
+                return "Password und Passwort Wiederholung stimmen nicht überein";
+            }
+        }
+
+        /**
+         * the application logout method
          */
         public function logout() {
             session_destroy();

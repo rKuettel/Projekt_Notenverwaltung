@@ -71,27 +71,27 @@ class DataBaseContext
     }
 
 
-    /**
-     * returns all messages
-     */
-    public function getMessages() : array {
-        $query = 'SELECT * FROM message order by created desc';
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_CLASS, 'Message');
-    }
+    // /**
+    //  * returns all messages
+    //  */
+    // public function getMessages() : array {
+    //     $query = 'SELECT * FROM message order by created desc';
+    //     $stmt = $this->pdo->prepare($query);
+    //     $stmt->execute();
+    //     return $stmt->fetchAll(PDO::FETCH_CLASS, 'Message');
+    // }
 
-    /**
-     * returns one message
-     */
-    public function getMessage(int $id) : Message {
-        $query = 'SELECT * FROM message where id = :id order by created desc';
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Message');
-        return $stmt->fetch();
-    }
+    // /**
+    //  * returns one message
+    //  */
+    // public function getMessage(int $id) : Message {
+    //     $query = 'SELECT * FROM message where id = :id order by created desc';
+    //     $stmt = $this->pdo->prepare($query);
+    //     $stmt->bindParam(":id", $id);
+    //     $stmt->execute();
+    //     $stmt->setFetchMode(PDO::FETCH_CLASS, 'Message');
+    //     return $stmt->fetch();
+    // }
 
     private function getDateCommand() {
         switch($this->dbType){
@@ -102,53 +102,53 @@ class DataBaseContext
         }
     }
 
-    /**
-     * create or updates the message
-     * returns the id of the message
-     */
-    public function addOrUpdateMessage(Message $message) : int {
+    // /**
+    //  * create or updates the message
+    //  * returns the id of the message
+    //  */
+    // public function addOrUpdateMessage(Message $message) : int {
 
-        // validate message
-        if (empty($message->message)) {
-            throw new Exception("Message must not be empty");
-        }
+    //     // validate message
+    //     if (empty($message->message)) {
+    //         throw new Exception("Message must not be empty");
+    //     }
 
-        if (empty($message->author)) {
-            throw new Exception("Author must not be empty");
-        }
+    //     if (empty($message->author)) {
+    //         throw new Exception("Author must not be empty");
+    //     }
 
-        if (empty($message->id)) {
-            $query = 'insert into message (created, author, message) values ('.$this->getDateCommand().',:author,:message)';
-            $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(":author", $message->author);
-            $stmt->bindParam(":message", $message->message);
-            $result = $stmt->execute();
-            if(!$result) {
-                echo $stmt->errorInfo();
-                die("Failed to insert data: ");
-            }
-            return $this->pdo->lastInsertId();                        
-        } else {
-            $query = 'update message set author = :author, message = :message, updated = '.$this->getDateCommand().' where id = :id';
-            $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(":author", $message->author);
-            $stmt->bindParam(":message", $message->message);
-            $stmt->bindParam(":id", $message->id);
-            $stmt->execute();
-            return $message->id;
-        }
-    }
+    //     if (empty($message->id)) {
+    //         $query = 'insert into message (created, author, message) values ('.$this->getDateCommand().',:author,:message)';
+    //         $stmt = $this->pdo->prepare($query);
+    //         $stmt->bindParam(":author", $message->author);
+    //         $stmt->bindParam(":message", $message->message);
+    //         $result = $stmt->execute();
+    //         if(!$result) {
+    //             echo $stmt->errorInfo();
+    //             die("Failed to insert data: ");
+    //         }
+    //         return $this->pdo->lastInsertId();                        
+    //     } else {
+    //         $query = 'update message set author = :author, message = :message, updated = '.$this->getDateCommand().' where id = :id';
+    //         $stmt = $this->pdo->prepare($query);
+    //         $stmt->bindParam(":author", $message->author);
+    //         $stmt->bindParam(":message", $message->message);
+    //         $stmt->bindParam(":id", $message->id);
+    //         $stmt->execute();
+    //         return $message->id;
+    //     }
+    // }
 
-    /**
-     * deletes a message from the database
-     */
-    public function deleteMessage($id) {
-        $query = 'delete from message where id = :id';
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
-        return true;
-    }
+    // /**
+    //  * deletes a message from the database
+    //  */
+    // public function deleteMessage($id) {
+    //     $query = 'delete from message where id = :id';
+    //     $stmt = $this->pdo->prepare($query);
+    //     $stmt->bindParam(":id", $id);
+    //     $stmt->execute();
+    //     return true;
+    // }
 
     /**
      * Try to login the user
@@ -175,7 +175,52 @@ class DataBaseContext
         }
     }
 
+    /**
+     * Checks if username already exists
+     * 
+     */
+    public function doesUsernameExist($username) : bool {
+        if (empty($username)) {
+            throw new Exception("Username must not be empty");
+        }
+        $query = 'SELECT * FROM user where username = :username';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
+        $user = $stmt->fetch();
+        if(empty($user)){
+            return false;
+        } 
+        else {
+            return true;
+        }
+    }
 
+    /**
+     * Registers a User
+     * 
+     */
+    public function addUser($username, $password){
+        if (empty($username)) {
+            throw new Exception("Username must not be empty");
+        }
+        if (empty($password)) {
+            throw new Exception("Password must not be empty");
+        }
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+       
+        $query = 'insert into user (username, password) values (:username,:password)';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":username", $username);
+        $stmt->bindParam(":password", $hashed_password);
+        $result = $stmt->execute();
+        if(!$result) {
+            echo $stmt->errorInfo();
+            die("Failed to insert data: ");
+        }
+
+    }
 
 }
 ?>

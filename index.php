@@ -1,5 +1,12 @@
 <?
+    $url = "";
     require_once("app.php");
+    if(isset($_GET["url"])){
+        $url = $_GET["url"];
+    }
+    if(empty($_SESSION["userId"]) and $url != "login" and $url !="register" ){
+        header("location: " . $app->getBasePath()."?url=login");
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,21 +23,21 @@
     <div class="header">
         <!-- Header -->
         <div class="logo">
-            <a href="<?= $app->getBasePath() ?>">
+            <!-- <a href="<?= $app->getBasePath() ?>">
                 <img src="assets/img/logo.jpg">
-            </a>
+            </a> -->
+            <h1> Notenverwaltung </h1>
         </div>
         <div class="navigation">
             <ul>
-                <li>
-                    <a href="?url=home">Home</a>
-                </li>
-                <li>
-                    <a href="?url=edit">Create</a>
-                </li>
                 <? if(empty($_SESSION["userId"])) {?>
                 <li>
-                    <a href="?url=login">Login</a>
+                    <? if($url == "register"){?>
+                            <a href="?url=login">Login</a>
+                    <?}
+                        else{?>
+                            <a href="?url=register">Register</a>
+                        <?}?>
                 </li>
                 <?}?>
                 <? if(!empty($_SESSION["userId"])) {?>
@@ -55,6 +62,9 @@
                 break;
                 case "login":
                     include("pages/login.php");
+                break;
+                case "register":
+                    include("pages/register.php");
                 break;
                 case "logout":
                     $app->logout();
