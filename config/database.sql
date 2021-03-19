@@ -9,24 +9,24 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`username`, `password`) VALUES
 ('admin', '$2y$10$3aU9wnaBQSF3uoWulalnTOBvfUvgwe7uYQLfAr5K5zzvlbYlGOf.u');
 
--- create fach table
-CREATE TABLE `fach` (
+-- create subject table
+CREATE TABLE `subject` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
-  `lehrer` varchar(50) NOT NULL,
-  `gewichtung` float NOT NULL,
-  `rundung` float NOT NULL,
-  FOREIGN KEY (userID) REFERENCES user(id)
+  `teacher` varchar(50) NOT NULL,
+  `weight` float NOT NULL,
+  `rounding` float NOT NULL,
+  FOREIGN KEY (userId) REFERENCES user(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- create note table
-CREATE TABLE `note` (
+CREATE TABLE `mark` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `fachId` int(11) NOT NULL,
-  `bezeichnung` varchar(30) NOT NULL,
-  `note` float NOT NULL,
-  `gewichtung` float NOT NULL,
-  `datum` datetime DEFAULT NULL,
-  FOREIGN KEY (fachID) REFERENCES fach(id)
+  `subjectId` int(11) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `value` float NOT NULL,
+  `weight` float NOT NULL,
+  `date` datetime DEFAULT NULL,
+  FOREIGN KEY (subjectId) REFERENCES subject(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

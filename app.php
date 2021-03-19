@@ -12,8 +12,10 @@
     require_once "classes/db.class.php";
 
     /* Models */
-    require_once "classes/models/message.model.php";
+
     require_once("classes/models/user.model.php");
+    require_once("classes/models/mark.model.php");
+    require_once("classes/models/subject.model.php");
 
 
     /* Helpers */

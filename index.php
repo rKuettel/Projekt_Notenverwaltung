@@ -57,8 +57,11 @@
             }
 
             switch($url){
-                case "edit":
-                    include("pages/edit.php");
+                case "editSubject":
+                    include("pages/editSubject.php");
+                break;
+                case "editMark":
+                    include("pages/editMark.php");
                 break;
                 case "login":
                     include("pages/login.php");
@@ -77,7 +80,7 @@
     </div>
     <!-- Footer -->
     <div class="footer">
-        &copy;<?= date("Y") ?> @ M133 Messageboard
+        &copy;<?= date("Y") ?> @ M133 Projekt_Notenverwaltung
     </div>
 
 </body>

@@ -71,27 +71,52 @@ class DataBaseContext
     }
 
 
-    // /**
-    //  * returns all messages
-    //  */
-    // public function getMessages() : array {
-    //     $query = 'SELECT * FROM message order by created desc';
-    //     $stmt = $this->pdo->prepare($query);
-    //     $stmt->execute();
-    //     return $stmt->fetchAll(PDO::FETCH_CLASS, 'Message');
-    // }
+    /**
+     * returns all Fächer
+     */
+    public function getSubjectsByUser(int $userId) : array {
+        $query = 'SELECT * FROM subject where userId = :userId';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":userId", $userId);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_CLASS, 'Subject');
+    }
 
-    // /**
-    //  * returns one message
-    //  */
-    // public function getMessage(int $id) : Message {
-    //     $query = 'SELECT * FROM message where id = :id order by created desc';
-    //     $stmt = $this->pdo->prepare($query);
-    //     $stmt->bindParam(":id", $id);
-    //     $stmt->execute();
-    //     $stmt->setFetchMode(PDO::FETCH_CLASS, 'Message');
-    //     return $stmt->fetch();
-    // }
+    /**
+     * returns one subject
+     */
+    public function getSubjectByUser(int $id, int $userId) : Subject {
+        $query = 'SELECT * FROM subject where id = :id and userId = :userId  ';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":userId", $userId);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Subject');
+        return $stmt->fetch();
+    }
+
+    /**
+     * returns all Fächer
+     */
+    public function getMarksBySubject(int $subjectId) : array {
+        $query = 'SELECT * FROM mark where subjectId = :subjectId';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":subjectId", $subjectId);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_CLASS, 'Mark');
+    }
+
+    /**
+     * returns one subject
+     */
+    public function getmark(int $id) : Mark {
+        $query = 'SELECT * FROM mark where id = :id ';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Mark');
+        return $stmt->fetch();
+    }
 
     private function getDateCommand() {
         switch($this->dbType){
@@ -102,53 +127,118 @@ class DataBaseContext
         }
     }
 
-    // /**
-    //  * create or updates the message
-    //  * returns the id of the message
-    //  */
-    // public function addOrUpdateMessage(Message $message) : int {
+    /**
+     * create or updates a subject
+     * returns the id the subject
+     */
+    public function addOrUpdateSubject(Subject $subject) : int {
 
-    //     // validate message
-    //     if (empty($message->message)) {
-    //         throw new Exception("Message must not be empty");
-    //     }
+        // validate message
+        if (empty($subject->name)) {
+            throw new Exception("Name must not be empty");
+        }
 
-    //     if (empty($message->author)) {
-    //         throw new Exception("Author must not be empty");
-    //     }
+        if (empty($subject->teacher)) {
+            throw new Exception("Teacher must not be empty");
+        }
 
-    //     if (empty($message->id)) {
-    //         $query = 'insert into message (created, author, message) values ('.$this->getDateCommand().',:author,:message)';
-    //         $stmt = $this->pdo->prepare($query);
-    //         $stmt->bindParam(":author", $message->author);
-    //         $stmt->bindParam(":message", $message->message);
-    //         $result = $stmt->execute();
-    //         if(!$result) {
-    //             echo $stmt->errorInfo();
-    //             die("Failed to insert data: ");
-    //         }
-    //         return $this->pdo->lastInsertId();                        
-    //     } else {
-    //         $query = 'update message set author = :author, message = :message, updated = '.$this->getDateCommand().' where id = :id';
-    //         $stmt = $this->pdo->prepare($query);
-    //         $stmt->bindParam(":author", $message->author);
-    //         $stmt->bindParam(":message", $message->message);
-    //         $stmt->bindParam(":id", $message->id);
-    //         $stmt->execute();
-    //         return $message->id;
-    //     }
-    // }
+        if (empty($subject->weight)) {
+            throw new Exception("Weight must not be empty");
+        }
+        if (empty($subject->rounding)) {
+            throw new Exception("rounding must not be empty");
+        }
 
-    // /**
-    //  * deletes a message from the database
-    //  */
-    // public function deleteMessage($id) {
-    //     $query = 'delete from message where id = :id';
-    //     $stmt = $this->pdo->prepare($query);
-    //     $stmt->bindParam(":id", $id);
-    //     $stmt->execute();
-    //     return true;
-    // }
+        if (empty($subject->id)) {
+            $query = 'insert into subject(userid, name, teacher, weight, rounding) values (:userId, :name, :teacher, :weight, :rounding)';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(":userId", $subject->userId);
+            $stmt->bindParam(":name", $subject->name);
+            $stmt->bindParam(":teacher", $subject->teacher);
+            $stmt->bindParam(":weight", $subject->weight);
+            $stmt->bindParam(":rounding", $subject->rounding);
+            $result = $stmt->execute();
+            if(!$result) {
+                echo $stmt->errorInfo();
+                die("Failed to insert data: ");
+            }
+            return $this->pdo->lastInsertId();                        
+        } else {
+            $query = 'update subject set name = :name, teacher = :teacher, weight = :weight, rounding = :rounding where id = :id';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(":id", $subject->id);
+            $stmt->bindParam(":name", $subject->name);
+            $stmt->bindParam(":teacher", $subject->teacher);
+            $stmt->bindParam(":weight", $subject->weight);
+            $stmt->bindParam(":rounding", $subject->rounding);
+            $stmt->execute();
+            return $subject->id;
+        }
+    }
+
+    /**
+     * create or updates a mark
+     * returns the id the mark
+     */
+    public function addOrUpdateMark(Mark $mark) : int {
+
+        // validate message
+        if (empty($mark->subjectId)) {
+            throw new Exception("SubjectId must not be empty");
+        }
+
+        if (empty($mark->name)) {
+            throw new Exception("Name must not be empty");
+        }
+
+        if (empty($mark->weight)) {
+            throw new Exception("Weight must not be empty");
+        }
+        if (empty($mark->value)) {
+            throw new Exception("Value must not be empty");
+        }
+        if (empty($mark->date)) {
+            throw new Exception("date must not be empty");
+        }
+
+        if (empty($mark->id)) {
+            $query = 'insert into mark(subjectId, name, weight, value, date) values (:subjectId, :name, :weight, :value, :date)';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(":subjectId", $mark->subjectId);
+            $stmt->bindParam(":name", $mark->name);
+            $stmt->bindParam(":weight", $mark->weight);
+            $stmt->bindParam(":value", $mark->value);
+            $stmt->bindParam(":date", $mark->date);
+            $result = $stmt->execute();
+            if(!$result) {
+                echo $stmt->errorInfo();
+                die("Failed to insert data: ");
+            }
+            return $this->pdo->lastInsertId();                        
+        } else {
+            $query = 'update mark set subjectId = :subjectId, name = :name, weight = :weight, value = :value, date = :date where id = :id';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(":id", $mark->id);
+            $stmt->bindParam(":subjectId", $mark->subjectId);
+            $stmt->bindParam(":name", $mark->name);
+            $stmt->bindParam(":weight", $mark->weight);
+            $stmt->bindParam(":value", $mark->value);
+            $stmt->bindParam(":date", $mark->date);
+            $stmt->execute();
+            return $mark->id;
+        }
+    }
+
+    /**
+     * deletes a message from the database
+     */
+    public function deleteMessage($id) {
+        $query = 'delete from message where id = :id';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        return true;
+    }
 
     /**
      * Try to login the user
