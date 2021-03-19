@@ -1,13 +1,13 @@
 <?
     if(empty($_SESSION)){
-        die;
+        die();
     }
     require_once("app.php");
 
     $mark;
 
     if (!empty($_GET["id"])) {
-        // load message from database
+        // load mark from database
         $mark = $app->getDbContext()->getMark($_GET["id"]);
     } else {
         $mark = new Mark();
@@ -16,7 +16,12 @@
     if(!empty($_POST["name"])) {
         // here we have a form post and we need to save the entry
 
-        // build message
+        // build mark
+        if(!empty($_GET["subjectId"])){
+            $mark->subjectId = $_GET["subjectId"];
+        }     
+
+        // to-do check if values are correct type and range
         $mark->name = $_POST["name"];
         $mark->value = $_POST["value"];
         $mark->weight = $_POST["weight"];
@@ -63,7 +68,7 @@
                 Note
             </td>
             <td>
-                <input name="value" type="text" required value="<?= $mark->value ?>">
+                <input name="value" type="number" min="1" max="6" required value="<?= $mark->value ?>">
             </td>
         </tr>
         <tr>
@@ -71,21 +76,17 @@
                 Gewichtung
             </td>
             <td>
-                <input name="weight" type="text" required value="<?= $mark->weight?>">
+                <input name="weight" type="number" min="0" max="1"  required value="<?= $mark->weight?>">
             </td>
-            <? if($isNew){?>
-                <input type=hidden name="subjectId" value="<?= $_GET("subjectId")?>">
-            <?}?>
         </tr>
         <tr>
             <td colspan="2">
+                <input type="button" value="Cancel" onclick="window.history.go(-1);">
                 <input type="submit" value="Save">
                 <? if (!$isNew) {?>
-                    <input type="button" value="Delete" onclick="deleteMessage()">
-                    <input type="button" value="Cancel" onclick="window.history.go(-1);">
+                    <input type="button" value="Delete" onclick="deleteMessage()">                    
                 <?}?>
             </td>
         </tr>
     </table>
-
 </form>

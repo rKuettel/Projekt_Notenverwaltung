@@ -88,5 +88,18 @@
             session_destroy();
             header("location: " . $this->getBasePath());
         }
+
+
+        public function calculateTotalAverage(array $subjects) : float{
+            $sumMarks = 0;
+            $sumWeight = 0;
+
+            foreach($subjects as $subject){
+                $sumMarks += $subject->average * $subject->weight;
+                $sumWeight += $subject->weight;
+            }
+
+            return $sumMarks/$sumWeight;
+        }
     }
 ?>

@@ -230,10 +230,21 @@ class DataBaseContext
     }
 
     /**
-     * deletes a message from the database
+     * deletes a mark from the database
      */
-    public function deleteMessage($id) {
-        $query = 'delete from message where id = :id';
+    public function deleteMark($id) {
+        $query = 'delete from mark where id = :id';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        return true;
+    }
+
+    /**
+     * deletes a subject with all its marks from the database
+     */
+    public function deleteSubject($id) {
+        $query = 'delete from subject where id = :id';
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(":id", $id);
         $stmt->execute();

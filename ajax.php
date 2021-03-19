@@ -2,7 +2,9 @@
     require_once("app.php");
 
 
-    // todo: Check if we are logged in
+    if(empty($_SESSION)){
+        die();
+    }
 
     function response($message) {
         echo $message;
@@ -11,8 +13,13 @@
 
     $cmd = $_POST["cmd"] ?? "";
     switch($cmd) {
-        case "deleteMessage":
-            if($app->getDbContext()->deleteMessage($_POST["id"])){
+        case "deleteMark":
+            if($app->getDbContext()->deleteMark($_POST["id"])){
+                response('{success: true}');
+            }
+            break;
+        case "deleteSubject":
+            if($app->getDbContext()->deleteSubject($_POST["id"])){
                 response('{success: true}');
             }
             break;

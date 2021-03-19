@@ -17,6 +17,8 @@
         // here we have a form post and we need to save the entry
 
         // build message
+
+        // to-do check if values are correct type and range
         $subject->userId = $_SESSION["userId"];
         $subject->name = $_POST["name"];
         $subject->teacher = $_POST["teacher"];
@@ -61,10 +63,10 @@
         </tr>
         <tr>
             <td>
-                Gewichtung
+                Gewichtung(in %)
             </td>
             <td>
-                <input name="weight" type="text" required value="<?= $subject->weight?>">
+                <input name="weight" type="number" min="0" max="100" required value="<?= $subject->weight?>">
             </td>
         </tr>
         <tr>
@@ -72,7 +74,12 @@
                 Gerundet auf
             </td>
             <td>
-                <input name="rounding" type="text" required value="<?= $subject->rounding ?>">
+                <select name="rounding" id="cars">
+                    <option value="1">1</option>
+                    <option value="0.5">0.5</option>
+                    <option value="0.25">0.25</option>
+                    <option value="0.1">0.1</option>
+                </select>
             </td>
         </tr>
         <tr>

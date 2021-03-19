@@ -49,9 +49,14 @@ div.alert {
 }
 
 /* Home page */
-.messageTable {
+.markTable {
     min-width: 700px;
-    border-collapse: collapse;
+    border: 1px solid black;
+    /* border-collapse: collapse; */
+}
+
+.subject{
+    border: 1px solid black;
 }
 .messageTable thead {
     background-color: mediumaquamarine;

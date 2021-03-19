@@ -17,7 +17,7 @@ CREATE TABLE `subject` (
   `teacher` varchar(50) NOT NULL,
   `weight` float NOT NULL,
   `rounding` float NOT NULL,
-  FOREIGN KEY (userId) REFERENCES user(id)
+  FOREIGN KEY (userId) REFERENCES user(id) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- create note table
@@ -28,5 +28,5 @@ CREATE TABLE `mark` (
   `value` float NOT NULL,
   `weight` float NOT NULL,
   `date` datetime DEFAULT NULL,
-  FOREIGN KEY (subjectId) REFERENCES subject(id)
+  FOREIGN KEY (subjectId) REFERENCES subject(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
