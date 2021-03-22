@@ -20,7 +20,7 @@
                 $sumWeight += $mark->weight;
             }
             // To-do rounding
-            $this->average = $sumMarks/$sumWeight;
+            $this->average = round($sumMarks/$sumWeight/$this->rounding) * $this->rounding;
         }
     }
 
