@@ -8,7 +8,6 @@
         $errors = true;
     }
 
-    $isNew = empty($message->id);
 ?>
 <form method="POST">
 <div class="loginForm">

@@ -103,7 +103,7 @@
                 $sumWeight += $subject->weight;
             }
 
-            return $sumMarks/$sumWeight;
+            return round($sumMarks/$sumWeight, 2);
         }
 
         /**

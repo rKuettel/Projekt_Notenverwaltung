@@ -183,7 +183,7 @@ class DataBaseContext
      */
     public function addOrUpdateMark(Mark $mark) : int {
 
-        // validate message
+        // validate mark
         if (empty($mark->subjectId)) {
             throw new Exception("SubjectId must not be empty");
         }

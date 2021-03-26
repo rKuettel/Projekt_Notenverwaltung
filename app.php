@@ -17,10 +17,6 @@
     require_once("classes/models/mark.model.php");
     require_once("classes/models/subject.model.php");
 
-
-    /* Helpers */
-    require_once("classes/stringHelper.class.php");
-
     /* Application */
     require_once("classes/app.class.php");
 

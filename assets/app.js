@@ -1,6 +1,6 @@
 
 /**
- * global function to delete a message
+ * global function to delete a Mark
  * 
  * @param  id 
  */
@@ -21,6 +21,11 @@ function globalDeleteMark(id, callback) {
     }
 }
 
+/**
+ * global function to delete a Subject
+ * 
+ * @param  id 
+ */
 function globalDeleteSubject(id, callback) {
     if(confirm("Are you sure?")) {
         var xhttp = new XMLHttpRequest();

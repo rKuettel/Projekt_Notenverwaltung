@@ -5,7 +5,7 @@
 
 ?>
 <? if(sizeof($subjects) == 0) {?>
-    <div class="message">Noch keine Fächer vorhanden</div>
+    <div>Noch keine Fächer vorhanden</div>
     <input type="button" value="Fach hinzufügen" onclick="location.href='?url=editSubject'">
 <?}else{?>
 <script>
