@@ -93,6 +93,7 @@
 </script>
 <?
 }?>
+<h2>Note <?= $isNew ? "erfassen" : "editieren"?> </h2>
 <? if($hasErr){?>
 <div class="alert">
     <?= $errorMsg;?>

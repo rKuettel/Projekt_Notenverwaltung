@@ -91,6 +91,9 @@
 </script>
 <?
 }?>
+
+<h2>Fach <?= $isNew ? "erstellen" : "editieren"?> </h2>
+
 <? if($hasErr){?>
 <div class="alert">
     <?= $errorMsg;?>

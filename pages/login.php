@@ -9,6 +9,7 @@
     }
 
 ?>
+<h2>Login</h2>
 <form method="POST">
 <div class="loginForm">
     <? if($errors) {?>
