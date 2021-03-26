@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/style.css" />
     <script src="assets/app.js"></script>
-    <title>Message Board</title>
+    <title>Notenverwaltung</title>
 </head>
 <body>
     
@@ -23,10 +23,10 @@
     <div class="header">
         <!-- Header -->
         <div class="logo">
-            <!-- <a href="<?= $app->getBasePath() ?>">
-                <img src="assets/img/logo.jpg">
-            </a> -->
-            <h1> Notenverwaltung </h1>
+            <a href="<?= $app->getBasePath() ?>">
+                <h1> Notenverwaltung </h1>
+            </a>
+            
         </div>
         <div class="navigation">
             <ul>
@@ -41,6 +41,9 @@
                 </li>
                 <?}?>
                 <? if(!empty($_SESSION["userId"])) {?>
+                    <li>
+                        <?= $app->getDbContext()->getUsername($_SESSION["userId"]) ?>
+                    </li>
                     <li>
                         <a href="?url=logout">Logout</a>
                     </li>

@@ -25,7 +25,7 @@ class DataBaseContext
                     or die(print_r($dbh->errorInfo(), true));
 
                     $dbh->exec("select database `$database`;");
-                    $this->connect($server, $database, $username, $password);
+                    $this->connect($server, $database, $username, $password, $dbType);
                     $this->createInitialDb();
                 } catch (PDOException $e) {
                     die("Database could not be created: ". $e->getMessage());
@@ -85,11 +85,10 @@ class DataBaseContext
     /**
      * returns one subject
      */
-    public function getSubjectByUser(int $id, int $userId) : Subject {
-        $query = 'SELECT * FROM subject where id = :id and userId = :userId  ';
+    public function getSubject(int $id) : Subject {
+        $query = 'SELECT * FROM subject where id = :id  ';
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(":id", $id);
-        $stmt->bindParam(":userId", $userId);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Subject');
         return $stmt->fetch();
@@ -109,7 +108,7 @@ class DataBaseContext
     /**
      * returns one subject
      */
-    public function getmark(int $id) : Mark {
+    public function getMark(int $id) : Mark {
         $query = 'SELECT * FROM mark where id = :id ';
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(":id", $id);
@@ -118,13 +117,12 @@ class DataBaseContext
         return $stmt->fetch();
     }
 
-    private function getDateCommand() {
-        switch($this->dbType){
-            case 'mssql':
-                return "getDate()";
-            default:
-                return "now()";
-        }
+    /**
+     * returns the owner (userId) of a mark
+     */
+    public function getUserIdFromMark($markId) : int {
+        $mark = $this->getMark($markId);
+        return $this->getSubject($mark->subjectId)->userId;
     }
 
     /**
@@ -133,7 +131,6 @@ class DataBaseContext
      */
     public function addOrUpdateSubject(Subject $subject) : int {
 
-        // validate message
         if (empty($subject->name)) {
             throw new Exception("Name must not be empty");
         }
@@ -149,6 +146,8 @@ class DataBaseContext
             throw new Exception("rounding must not be empty");
         }
 
+
+        // Add a new subject
         if (empty($subject->id)) {
             $query = 'insert into subject(userid, name, teacher, weight, rounding) values (:userId, :name, :teacher, :weight, :rounding)';
             $stmt = $this->pdo->prepare($query);
@@ -163,7 +162,9 @@ class DataBaseContext
                 die("Failed to insert data: ");
             }
             return $this->pdo->lastInsertId();                        
-        } else {
+        }
+        // Update an existing subject 
+        else {
             $query = 'update subject set name = :name, teacher = :teacher, weight = :weight, rounding = :rounding where id = :id';
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(":id", $subject->id);
@@ -199,8 +200,11 @@ class DataBaseContext
         }
         if (empty($mark->date)) {
             throw new Exception("date must not be empty");
+            
         }
+        echo $mark->date;
 
+        // Add a new Mark
         if (empty($mark->id)) {
             $query = 'insert into mark(subjectId, name, weight, value, date) values (:subjectId, :name, :weight, :value, :date)';
             $stmt = $this->pdo->prepare($query);
@@ -215,7 +219,10 @@ class DataBaseContext
                 die("Failed to insert data: ");
             }
             return $this->pdo->lastInsertId();                        
-        } else {
+        }
+        
+        // Update an existing Mark
+        else {
             $query = 'update mark set subjectId = :subjectId, name = :name, weight = :weight, value = :value, date = :date where id = :id';
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(":id", $mark->id);
@@ -296,6 +303,23 @@ class DataBaseContext
         else {
             return true;
         }
+    }
+
+    /**
+     * Gets the username according to the userId
+     * 
+     */
+    public function getUsername($userId) : string {
+        if (empty($userId)) {
+            throw new Exception("UserId must not be empty");
+        }
+        $query = 'SELECT * FROM user where id = :id';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":id", $userId);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
+        $user = $stmt->fetch();
+        return $user->username;
     }
 
     /**

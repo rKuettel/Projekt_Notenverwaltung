@@ -65,8 +65,10 @@
         /**
          * the application register method
          */
-        public function register($username, $pasword, $passwordRepeat) : string {           
+        public function register($username, $pasword, $passwordRepeat) : string {  
+            // Check if password and password repetition match         
             if ($pasword == $passwordRepeat){
+                // Check if username already exists
                 if (!$this->dbContext->doesUsernameExist($username)){
                     $this->dbContext->addUser($username, $pasword);
                     $this->login($username, $pasword);
@@ -82,14 +84,16 @@
         }
 
         /**
-         * the application logout method
-         */
+        * returns one subject
+        */
         public function logout() {
             session_destroy();
             header("location: " . $this->getBasePath());
         }
 
-
+        /**
+        * calculates the average of all suvjects
+        */
         public function calculateTotalAverage(array $subjects) : float{
             $sumMarks = 0;
             $sumWeight = 0;
@@ -102,8 +106,10 @@
             return $sumMarks/$sumWeight;
         }
 
-
-        public function test_input($data) {
+        /**
+         * transforms input Data to be more secure
+         */
+        public function testInput($data) {
             $data = trim($data);
             $data = stripslashes($data);
             $data = htmlspecialchars($data);

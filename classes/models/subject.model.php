@@ -11,6 +11,10 @@
         public $rounding;
         public $average;
 
+
+        /**
+         * Calculates the average of a subject with a list of all marks
+         */
         public function calculateSubjectAverage(array $marks){
             $sumMarks = 0;
             $sumWeight = 0;
@@ -19,7 +23,7 @@
                 $sumMarks += $mark->value * $mark->weight;
                 $sumWeight += $mark->weight;
             }
-            // To-do rounding
+
             $this->average = round($sumMarks/$sumWeight/$this->rounding) * $this->rounding;
         }
     }

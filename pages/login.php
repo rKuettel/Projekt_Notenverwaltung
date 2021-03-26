@@ -4,7 +4,7 @@
     $errors = false;
 
     if(!empty($_POST["username"]) && !empty($_POST["password"])) {
-        $app->login($_POST["username"], $_POST["password"]);
+        $app->login($app->testInput($_POST["username"]), $_POST["password"]);
         $errors = true;
     }
 

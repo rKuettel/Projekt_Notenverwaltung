@@ -7,70 +7,71 @@
     $mark;
 
     $hasErr = false;
-    $nameErr = "";
-    $valErr = "";
-    $dateErr = "";
-    $weightErr = "";
-
-    //to-do check if user has access to marks
+    $errorMsg = "Error:";
 
     if (!empty($_GET["id"])) {
         // load mark from database
         $mark = $app->getDbContext()->getMark($_GET["id"]);
+
+        //check if user has access to mark
+        if($app->getDbContext()->getSubject($mark->subjectId)->userId != $_SESSION["userId"]){
+            die();
+        }
     } else {
         $mark = new Mark();
     }
 
+    // When the form is psted
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-        // here we have a form post and we need to save the entry
 
         // build mark
         if(!empty($_GET["subjectId"])){
             $mark->subjectId = $_GET["subjectId"];
         }     
 
-        // to-do check if values are correct type and range
+        // Validation
         if(empty($_POST["name"])){
-            $nameErr = "Name wird benötigt";
+            $errorMsg .= "<br>Name wird benötigt";
             $hasErr = true;
         }
         else{
-            $mark->name = $app->test_input($_POST["name"]);
+            $mark->name = $app->testInput($_POST["name"]);
         }
 
         if(empty($_POST["value"])){
-            $valErr = "Note wird benötigt";
+            $errorMsg .= "<br>Note wird benötigt";
             $hasErr = true;
         }
         else{
-            $mark->value = $app->test_input($_POST["value"]);
+            $mark->value = $app->testInput($_POST["value"]);
             if(!(is_numeric($mark->value) and $mark->value <= 6 and $mark->value >= 1 )){
-                $valErr = "Die Note muss zwischen 1 und 6 sein";
+                $errorMsg .= "<br>Die Note muss zwischen 1 und 6 sein";
                 $hasErr = true;
             }
         }
 
         if(empty($_POST["weight"])){
-            $weightErr = "Gewichtung wird benötigt";
+            $errorMsg += "<br>Gewichtung wird benötigt";
             $hasErr = true;
         }
         else{
-            $mark->weight = $app->test_input($_POST["weight"]);
+            $mark->weight = $app->testInput($_POST["weight"]);
             if(!(is_numeric($mark->weight) and $mark->weight >= 0 )){
-                $weightErr = "Die gewichtung kann nicht negativ sein";
+                $errorMsg .= "<br>Die gewichtung kann nicht negativ sein";
                 $hasErr = true;
             }
         }
 
         if(empty($_POST["date"])){
-            $dateErr = "Datum wird benötigt";
+            $errorMsg .= "<br>Datum wird benötigt";
             $hasErr = true;
         }
         else{
-            $mark->date = $app->test_input($_POST["date"]);
+            $mark->date = $app->testInput($_POST["date"]);
         }
 
 
+        // Add or Update in database
         if(!$hasErr){
             $app->getDbContext()->addOrUpdateMark($mark);
 
@@ -84,14 +85,19 @@
 ?>
 <? if(!$isNew) {?>
 <script>
-    function deleteMessage() {
-        globalDeleteMessage(<?= $id ?>, function() {
+    function deleteMark() {
+        globalDeleteMark(<?= $mark->id ?>, function() {
             window.location.replace("<?= $app->getBasePath() ?>");
         });
     }
 </script>
 <?
 }?>
+<? if($hasErr){?>
+<div class="alert">
+    <?= $errorMsg;?>
+</div>
+<?}?>
 <form method="POST">
     <table>
         <tr>
@@ -101,9 +107,6 @@
             <td>
                 <input name="name"  required maxlength="200"  type="text" value="<?= $mark->name ?>">
             </td>
-            <td>
-                 <p><? echo $nameErr ?></p>
-            </td>
         </tr>
         <tr>
             <td>
@@ -112,9 +115,6 @@
             <td>
                 <input name="date" type="date" required value="<?= $mark->date ?>">
             </td>
-            <td>
-                 <p><? echo $dateErr ?></p>
-            </td>
         <tr>
             <td>
                 Note
@@ -122,27 +122,21 @@
             <td>
                 <input name="value" type="text" required value="<?= $mark->value ?>">
             </td>
-            <td>
-                 <? echo $valErr ?>
-            </td>
         </tr>
         <tr>
             <td>
-                Gewichtung
+                Gewichtung(in %)
             </td>
             <td>
                 <input name="weight" type="text" required value="<?= $mark->weight?>">
             </td>
-            <td>
-                 <? echo $weightErr ?>
-            </td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="button" value="Cancel" onclick="window.history.go(-1);">
+                <input type="button" value="Cancel" onclick="location.href='?url=home'">
                 <input type="submit" value="Save">
                 <? if (!$isNew) {?>
-                    <input type="button" value="Delete" onclick="deleteMessage()">                    
+                    <input type="button" value="Delete" onclick="deleteMark()">                    
                 <?}?>
             </td>
         </tr>

@@ -14,14 +14,29 @@
     $cmd = $_POST["cmd"] ?? "";
     switch($cmd) {
         case "deleteMark":
-            if($app->getDbContext()->deleteMark($_POST["id"])){
-                response('{success: true}');
+            // Check if user is allowed to delete Mark
+            if($app->getDbContext()->getUserIdFromMark($_POST["id"]) == $_SESSION["userId"]){
+                if($app->getDbContext()->deleteMark($_POST["id"])){
+                    response('{success: true}');
+            }
+            else{
+                die();
+            }
+            
             }
             break;
+
         case "deleteSubject":
-            if($app->getDbContext()->deleteSubject($_POST["id"])){
-                response('{success: true}');
+            //Check if user is allowed to delete Subject
+            if($app->getDbContext()->getSubject($_POST["id"])->userId == $_SESSION["userId"]){
+                if($app->getDbContext()->deleteSubject($_POST["id"])){
+                    response('{success: true}');
+                }
             }
+            else{
+                die();
+            }
+            
             break;
 
         default:

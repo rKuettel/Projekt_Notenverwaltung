@@ -5,8 +5,8 @@
 
 ?>
 <? if(sizeof($subjects) == 0) {?>
-    <div class="message">There are no entries</div>
-    <a href="?url=editSubject">Neues Fach hinzufügen</a>
+    <div class="message">Noch keine Fächer vorhanden</div>
+    <input type="button" value="Fach hinzufügen" onclick="location.href='?url=editSubject'">
 <?}else{?>
 <script>
     function deleteMark(id) {
@@ -25,6 +25,7 @@
         <section id="subject-<?=$subject->id?>" class="subject">
             <h2>Fach <?= $subject->name?> bei <?= $subject->teacher?>
             <p>Gewichtung: <?= $subject->weight?>%</p>
+            <p>Gerundet auf: <?= $subject->rounding?></p>
             <p>
                 
                 <input type="button" value="Fach editieren" onclick="location.href='?url=editSubject&id=<?= $subject->id?>'">
@@ -67,10 +68,11 @@
             <p>Notendurchschnitt: <?$subject->calculateSubjectAverage($marks); 
                                     echo $subject->average?> </p>
             <?}?>
+            <hr>
         </section>     
     <?}?>
     <p>
-        <a href="?url=editSubject">Neues Fach hinzufügen</a>        
+        <input type="button" value="Fach hinzufügen" onclick="location.href='?url=editSubject'">    
     </p>
     <p>
         <h2>Abschluss Note: <?= $app->calculateTotalAverage($subjects)?></h2>

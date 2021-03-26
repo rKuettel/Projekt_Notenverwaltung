@@ -8,7 +8,18 @@ body, table, div, p{
 .header {
     padding: 20px;
     display: flex;
+    justify-content: space-between;
+    background-color: lightblue;
 }
+
+.header a{
+    text-decoration: none;
+}
+
+.header a h1{
+    color: darkblue; 
+}
+
 .content {
     padding:20px;
 }
@@ -43,28 +54,37 @@ div.alert {
     padding: 10px;
     text-decoration: none;;
     color: black;
+    background-color: lightgray;
 }
 .navigation ul li a:hover {
     background-color: mediumaquamarine;
 }
 
 /* Home page */
+.subject{
+    margin-bottom: 3em;
+    width: auto;
+}
+
 .markTable {
-    min-width: 700px;
-    border: 1px solid black;
+    padding: 0;
+    width: 90%;
+    min-width: 500px;
     /* border-collapse: collapse; */
 }
 
-.subject{
-    border: 1px solid black;
-}
-.messageTable thead {
+.markTable th {
     background-color: mediumaquamarine;
 }
-.messageTable tbody tr:nth-child(even) {
-    background-color: silver;
+.markTable tbody tr td{
+    text-align: center;
+    margin: 3px;
 }
-.messageTable tbody tr:hover {
+
+.markTable tbody tr:nth-child(even) {
+    background-color: lightgray;
+}
+.markTable tbody tr:hover {
     background-color: burlywood;
 }
 

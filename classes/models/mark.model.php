@@ -12,7 +12,9 @@
 
         public function __construct()
         {   
-            $this->date= date("Y-m-d");
+            //Formating of date to not show time as well
+            $dateTime = new DateTime($this->date);
+            $this->date = $dateTime->format('Y-m-d');
         }
     }
 
